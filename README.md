@@ -142,6 +142,9 @@ const jobs = [
 ## Owner
 * [Knfs.,jsc](https://github.com/knfs-library)
 
+## More
+* [Queue](https://github.com/knfs-library/bamimi-schedule/blob/master/docs/QUEUE.md)
+* [JOB](https://github.com/knfs-library/bamimi-schedule/blob/master/docs/JOB.md)
 
 ## License
 
