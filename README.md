@@ -144,7 +144,7 @@ const jobs = [
 
 ## More
 * [Queue](https://github.com/knfs-library/bamimi-schedule/blob/master/docs/QUEUE.md)
-* [JOB](https://github.com/knfs-library/bamimi-schedule/blob/master/docs/JOB.md)
+* [Job](https://github.com/knfs-library/bamimi-schedule/blob/master/docs/JOB.md)
 
 ## License
 
