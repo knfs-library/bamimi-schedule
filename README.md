@@ -5,7 +5,7 @@
 	<a href="https://scrutinizer-ci.com/g/knfs-library/bamimi-schedule/?branch=master"alt="scrutinizer">
 	<img src="https://scrutinizer-ci.com/g/knfs-library/bamimi-schedule/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality" /></a>
 	<a href="https://github.com/knfs-library/bamimi-schedule/actions"alt="scrutinizer">
-	<!-- <img src="https://github.com/knfs-library/bamimi-schedule/actions" alt="github" /></a> -->
+	<img src="https://github.com/knfs-library/bamimi-schedule/actions" alt="github" /></a>
 </p>
 
 <h1> <span style="color:#013C4D;">About</span> <span style="color:#2B7F84;">Bamimi schedule</span></h1>
