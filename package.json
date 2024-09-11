@@ -1,6 +1,6 @@
 {
   "name": "@knfs-tech/bamimi-schedule",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Schedule module",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
