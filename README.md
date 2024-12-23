@@ -1,5 +1,5 @@
 <p align="center">
- <img width="250" src="https://github.com/knfs-jsc/bamimi-schedule/blob/master/docs/images/logo.png?raw=true">
+ <img width="250" src="https://github.com/knfs-library/bamimi-schedule/blob/master/docs/images/logo.png?raw=true">
   <br>
 	<a href="https://scrutinizer-ci.com/g/knfs-library/bamimi-schedule/build-status/master"alt="scrutinizer">
 	<img src="https://scrutinizer-ci.com/g/knfs-library/bamimi-schedule/badges/build.png?b=master" alt="Build Status" /></a>
