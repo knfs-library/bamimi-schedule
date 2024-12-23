@@ -24,6 +24,8 @@
 
     const queueManager = new QueueManager(config);
 	// or get instance if use singleton
+    const queueSingletonManager1 = queueManager.singleton()
+    // or
 	const queueSingletonManager = QueueManager.getInstance()
     ```
 
