@@ -127,7 +127,6 @@ const jobs = [
   {
     queue: "emailQueue",
     name: "sendWelcomeEmail",
-    isCronJob: false,
     options: { priority: 1 },
     handle: async (job) => {
       // Job handler logic for sending welcome emails
@@ -136,8 +135,15 @@ const jobs = [
   {
     queue: "reportQueue",
     name: "generateMonthlyReport",
-    isCronJob: true,
-    options: { repeat: { cron: "0 0 1 * *" } },  // Runs on the first day of every month
+    schedules: [
+      {
+        name: "first-day-every-month",
+        time: {
+          pattern: "0 0 1 * *"
+        }, // cron schedule
+        prepare: { data: { email: "test@example.com" } },
+      },
+    ],  // Runs on the first day of every month
     handle: async (job) => {
       // Job handler logic for generating reports
     }
