@@ -1,3 +1,4 @@
+const job = require("./../../lib/cjs/job");
 const initializeJobs = require("./../../lib/cjs/job")
 
 describe('initializeJobs', () => {
@@ -9,7 +10,7 @@ describe('initializeJobs', () => {
 	beforeEach(() => {
 		// Mock Queue methods
 		mockQueue = {
-			add: jest.fn().mockResolvedValue(), // Mock hàm add cho queue
+			upsertJobScheduler: jest.fn().mockResolvedValue(), // Mock hàm add cho queue
 			on: jest.fn()  // Mock hàm on cho event listener
 		};
 
@@ -30,8 +31,17 @@ describe('initializeJobs', () => {
 			{
 				queue: 'testQueue',
 				name: 'testJob',
-				isCronJob: true,
-				options: { repeat: { cron: '*/1 * * * *' } },
+				options: {},
+				schedules: [
+					{
+						name: "dailyEmail",
+						time: {
+							pattern: "0 0 * * *"
+
+						}, // cron schedule
+						prepare: { data: { email: "test@example.com" } },
+					},
+				],
 				handle: jest.fn() // Mock handle cho job
 			}
 		];
@@ -42,10 +52,19 @@ describe('initializeJobs', () => {
 		// Kiểm tra xem queue có được lấy đúng cách không
 		expect(mockQueueManager.getQueue).toHaveBeenCalledWith('testQueue');
 		// Kiểm tra xem cron job có được thêm vào queue không
-		expect(mockQueue.add).toHaveBeenCalledWith('testJob', {}, { repeat: { cron: '*/1 * * * *' } });
+		expect(mockQueue.upsertJobScheduler).toHaveBeenCalledWith(
+			jobs[0].schedules[0].name,
+			jobs[0].schedules[0].time, {
+				name: jobs[0].name,
+				data: {
+					jobData: jobs[0].schedules[0].prepare.data
+				},
+				opts: jobs[0].options
+			}
+		);
 
 		// Kiểm tra xem worker có được lấy đúng cách không
-		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('testQueue', jobs[0].handle);
+		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('testQueue', jobs[0].handle, jobs[0].options);
 
 		// Kiểm tra sự kiện 'completed' có được lắng nghe không
 		expect(mockWorker.on).toHaveBeenCalledWith('completed', expect.any(Function));
@@ -59,7 +78,6 @@ describe('initializeJobs', () => {
 			{
 				queue: 'testQueue',
 				name: 'testJob',
-				isCronJob: false, // Không phải cron job
 				options: {},
 				handle: jest.fn() // Mock handle cho job
 			}
@@ -68,8 +86,8 @@ describe('initializeJobs', () => {
 		await initializeJobs(jobs, mockQueueManager);
 
 		expect(mockQueueManager.getQueue).toHaveBeenCalledWith('testQueue');
-		expect(mockQueue.add).not.toHaveBeenCalled();
-		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('testQueue', jobs[0].handle);
+		expect(mockQueue.upsertJobScheduler).not.toHaveBeenCalled();
+		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('testQueue', jobs[0].handle, jobs[0].options);
 		expect(mockWorker.on).toHaveBeenCalledWith('completed', expect.any(Function));
 
 		// Kiểm tra sự kiện 'failed' có được lắng nghe không
@@ -81,14 +99,22 @@ describe('initializeJobs', () => {
 			{
 				queue: 'queue1',
 				name: 'job1',
-				isCronJob: true, // Là cron job
 				options: {},
+				schedules: [
+					{
+						name: "dailyEmail",
+						time: {
+							pattern: "0 0 * * *"
+
+						}, // cron schedule
+						prepare: { data: { email: "test@example.com" } },
+					},
+				],
 				handle: jest.fn() // Mock handle cho job
 			},
 			{
 				queue: 'queue2',
 				name: 'job2',
-				isCronJob: false, // Không phải cron job
 				options: {},
 				handle: jest.fn() // Mock handle cho job
 			}
@@ -102,11 +128,20 @@ describe('initializeJobs', () => {
 		expect(mockQueueManager.getQueue).toHaveBeenCalledWith('queue2');
 
 		// Đảm bảo cron job chỉ được thêm vào cho job đầu tiên
-		expect(mockQueue.add).toHaveBeenCalledWith('job1', {}, {});
+		expect(mockQueue.upsertJobScheduler).toHaveBeenCalledWith(
+			jobs[0].schedules[0].name,
+			jobs[0].schedules[0].time, {
+			name: jobs[0].name,
+			data: {
+				jobData: jobs[0].schedules[0].prepare.data
+			},
+			opts: jobs[0].options
+		}
+		);
 
 		// Kiểm tra xem worker có được lấy cho cả hai job không
-		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('queue1', jobs[0].handle);
-		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('queue2', jobs[1].handle);
+		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('queue1', jobs[0].handle, jobs[0].options);
+		expect(mockQueueManager.getWorker).toHaveBeenCalledWith('queue2', jobs[1].handle, jobs[0].options);
 
 		// Kiểm tra sự kiện 'completed' và 'failed' cho cả hai worker
 		expect(mockWorker.on).toHaveBeenCalledWith('completed', expect.any(Function));
