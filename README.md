@@ -42,8 +42,16 @@ const jobs = [
   {
     queue: "testQueue",
     name: "testJob",
-    isCronJob: true,
-    options: { repeat: { cron: "0 * * * *" } },
+    schedules: [
+      {
+        name: "first-day-every-month",
+        time: {
+          pattern: "0 0 1 * *"
+        }, // cron schedule
+        prepare: { data: { email: "test@example.com" } },
+      },
+    ],
+    options: {},
     handle: async (job) => { /* Job handler function */ }
   }
 ];
